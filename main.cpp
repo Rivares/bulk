@@ -13,7 +13,7 @@ void set_bulk(size_t bulk)
     std::cout << "bulk size is " << bulk << std::endl;
 }
 
-int main()
+int main(int argc, const char *argv[])
 {
     ProfilerStart("bulk.prof");
 
@@ -25,6 +25,41 @@ int main()
 
 
     {
+        /*!
+            Grup args
+        */
+
+        try
+        {
+            prog_options::options_description desc {"Options"};
+            desc.add_options()
+                    ("help,h", "This screen")
+                    ("config", prog_options::value<std::string>()->default_value("app.yaml"), "config filename")
+                    ("bulk", prog_options::value<size_t>()->default_value(5)->notifier(set_bulk), "bulk_size")
+                    ;
+            prog_options::variables_map vm;
+            prog_options::store(parse_command_line(argc, argv, desc), vm);
+            prog_options::notify(vm);
+
+            if (vm.count("help"))
+            {
+                std::cout << desc << '\n';
+            }
+            else if (vm.count("config"))
+            {
+                std::cout << "readfrom: " << vm["config"].as<std::string>() << '\n';
+            }
+            else if (vm.count("bulk"))
+            {
+                std::cout << "bulk: " << vm["bulk"].as<std::size_t>() << '\n';
+            }
+        }
+        catch (const std::exception& except)
+        {
+            std::cerr << except.what() << '\n';
+        }
+
+
         /*!
             Логика работы для статических блоков (в примере N == 3):
 
