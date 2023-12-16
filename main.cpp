@@ -1,19 +1,12 @@
 #include <gperftools/profiler.h>
 
+#include <string>
 #include <iostream>
-
-#include <boost/program_options.hpp>
+#include <queue>
 
 #include "lib.hpp"
 
-namespace prog_options = boost::program_options;
-
-void set_bulk(size_t bulk)
-{
-    std::cout << "bulk size is " << bulk << std::endl;
-}
-
-int main(int argc, const char *argv[])
+int main(int argc, const char* argv[])
 {
     ProfilerStart("bulk.prof");
 
@@ -31,27 +24,29 @@ int main(int argc, const char *argv[])
 
         try
         {
-            prog_options::options_description desc {"Options"};
-            desc.add_options()
-                    ("help,h", "This screen")
-                    ("config", prog_options::value<std::string>()->default_value("app.yaml"), "config filename")
-                    ("bulk", prog_options::value<size_t>()->default_value(5)->notifier(set_bulk), "bulk_size")
-                    ;
-            prog_options::variables_map vm;
-            prog_options::store(parse_command_line(argc, argv, desc), vm);
-            prog_options::notify(vm);
+            if (argc > 0)
+            {
+                if (argv)
+                {
+                    std::queue<std::string> poolCommands;
+                    size_t cntCommands = std::stoi(static_cast<std::string>(argv[1]));
+                    std::string currCommand = "";
+                    while (std::getline(std::cin, currCommand))
+                    {
+                        poolCommands.push(currCommand);
 
-            if (vm.count("help"))
-            {
-                std::cout << desc << '\n';
-            }
-            else if (vm.count("config"))
-            {
-                std::cout << "readfrom: " << vm["config"].as<std::string>() << '\n';
-            }
-            else if (vm.count("bulk"))
-            {
-                std::cout << "bulk: " << vm["bulk"].as<std::size_t>() << '\n';
+
+                        if ((poolCommands.size() % cntCommands) == 0)
+                        {
+                            for (size_t i = 0; i < poolCommands.size(); ++i)
+                            {   std::cout << poolCommands.front();  poolCommands.pop();   }
+                        }
+                    }
+
+                    for (size_t i = 0; i < poolCommands.size(); ++i)
+                    {   std::cout << poolCommands.front();  poolCommands.pop();   }
+
+                }
             }
         }
         catch (const std::exception& except)
