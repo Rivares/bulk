@@ -29,25 +29,47 @@ int main(int argc, const char* argv[])
                 if (argv)
                 {
                     std::queue<std::string> poolCommands;
+                    std::queue<std::string> poolSubCommands;
                     size_t cntCommands = std::stoi(static_cast<std::string>(argv[1]));
                     std::string currCommand = "";
+                    bool streamSubCommands = false;
+                    auto output = [cntCommands](std::queue<std::string>& poolCommands){
+                        if (poolCommands.size() >= cntCommands)
+                        {
+                            for (size_t i = 0; i < cntCommands; ++i)
+                            {   std::cout << poolCommands.front() << '\n';  poolCommands.pop();   }
+                        }
+
+                    };
                     while (std::getline(std::cin, currCommand))
                     {
-                        poolCommands.push(currCommand);
+                        if (currCommand == "{")
+                        {   streamSubCommands = true;   continue;   }
+                        if (currCommand == "}")
+                        {
+                            streamSubCommands = false;
+                            output(poolSubCommands);
+                            continue;
+                        }
 
+                        if (streamSubCommands)
+                        {   poolSubCommands.push(currCommand);  }
+                        else
+                        {
+                            poolCommands.push(currCommand);
+                        }
 
                         if ((poolCommands.size() % cntCommands) == 0)
                         {
-                            for (size_t i = 0; i < poolCommands.size(); ++i)
-                            {   std::cout << poolCommands.front();  poolCommands.pop();   }
+                            output(poolCommands);
                         }
                     }
 
-                    for (size_t i = 0; i < poolCommands.size(); ++i)
-                    {   std::cout << poolCommands.front();  poolCommands.pop();   }
-
+                    while (poolCommands.size() != 0)
+                    {   std::cout << poolCommands.front() << '\n';  poolCommands.pop();   }
                 }
             }
+
         }
         catch (const std::exception& except)
         {
