@@ -28,31 +28,42 @@ int main(int argc, const char* argv[])
             {
                 if (argv)
                 {
+                    std::string currCommand = "";
                     std::queue<std::string> poolCommands;
                     std::queue<std::string> poolSubCommands;
                     size_t cntCommands = std::stoi(static_cast<std::string>(argv[1]));
-                    std::string currCommand = "";
-                    bool streamSubCommands = false;
-                    auto output = [cntCommands](std::queue<std::string>& poolCommands){
-                        if (poolCommands.size() >= cntCommands)
-                        {
-                            for (size_t i = 0; i < cntCommands; ++i)
-                            {   std::cout << poolCommands.front() << '\n';  poolCommands.pop();   }
-                        }
+                    size_t cntUnfinishedBraces = 0;
 
+                    auto outputInstant = [](std::queue<std::string>& commands){
+                        while (commands.size() != 0)
+                        {   std::cout << commands.front() << '\n';  commands.pop();   }
                     };
                     while (std::getline(std::cin, currCommand))
                     {
                         if (currCommand == "{")
-                        {   streamSubCommands = true;   continue;   }
+                        {
+                            ++cntUnfinishedBraces;
+
+                            if (cntUnfinishedBraces == 1)
+                            {
+                                outputInstant(poolCommands);
+                            }
+
+                            continue;
+                        }
                         if (currCommand == "}")
                         {
-                            streamSubCommands = false;
-                            output(poolSubCommands);
+                            --cntUnfinishedBraces;
+
+                            if (cntUnfinishedBraces == 0)
+                            {
+                                outputInstant(poolSubCommands);
+                            }
+
                             continue;
                         }
 
-                        if (streamSubCommands)
+                        if (cntUnfinishedBraces >= 1)
                         {   poolSubCommands.push(currCommand);  }
                         else
                         {
@@ -61,12 +72,15 @@ int main(int argc, const char* argv[])
 
                         if ((poolCommands.size() % cntCommands) == 0)
                         {
-                            output(poolCommands);
+                            if (poolCommands.size() >= cntCommands)
+                            {
+                                for (size_t i = 0; i < cntCommands; ++i)
+                                {   std::cout << poolCommands.front() << '\n';  poolCommands.pop();   }
+                            }
                         }
                     }
 
-                    while (poolCommands.size() != 0)
-                    {   std::cout << poolCommands.front() << '\n';  poolCommands.pop();   }
+                    outputInstant(poolCommands);
                 }
             }
 
@@ -90,6 +104,11 @@ int main(int argc, const char* argv[])
             cmd5
             EOF
                     bulk: cmd4, cmd5        Конец ввода – принудительно завершаем блок.
+
+cmd1
+cmd2
+cmd3
+cmd4
         */
 
         std::cout << "Constructions project of objects:\n\n";
@@ -129,6 +148,26 @@ int main(int argc, const char* argv[])
             cmd10                           Конец ввода – динамический блок игнорируется, не выводим
             cmd11
             EOF
+
+
+cmd1
+cmd2
+{
+cmd3
+cmd4
+}
+{
+cmd5
+cmd6
+{
+cmd7
+cmd8
+}
+cmd9
+}
+{
+cmd10
+cmd11
 
         */
 
