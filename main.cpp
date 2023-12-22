@@ -23,7 +23,7 @@ int main(int argc, const char* argv[])
 
     {
         /*!
-            Grup args
+            Collecting args
         */
 
         try
