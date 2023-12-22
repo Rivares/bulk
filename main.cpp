@@ -1,14 +1,18 @@
 #include <gperftools/profiler.h>
 
-#include <string>
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <queue>
+#include <ctime>
 
 #include "lib.hpp"
 
+const std::string projName = "bulk";
+
 int main(int argc, const char* argv[])
 {
-    ProfilerStart("bulk.prof");
+    ProfilerStart(std::string(projName + ".prof").c_str());
 
 ///    Разработать программу для пакетной обработки команд.
 ///    Команды считываются построчно из стандартного ввода и обрабатываются блоками по N команд.
@@ -33,10 +37,26 @@ int main(int argc, const char* argv[])
                     std::queue<std::string> poolSubCommands;
                     size_t cntCommands = std::stoi(static_cast<std::string>(argv[1]));
                     size_t cntUnfinishedBraces = 0;
+                    time_t timeFirstCommandInstantOut;
+                    time_t timeFirstCommandGeneralOut;
 
-                    auto outputInstant = [](std::queue<std::string>& commands){
+                    auto outputInstant = [&timeFirstCommandInstantOut](const time_t& timeFirstCommand, std::queue<std::string>& commands){
+
+                        if (commands.size() == 0)
+                        {   return;   }
+
+                        std::ofstream file(projName + std::to_string(static_cast<ulong>(timeFirstCommand)) + ".log");
+
+                        std::cout << projName + ": ";
+                        file << projName + ": ";
                         while (commands.size() != 0)
-                        {   std::cout << commands.front() << '\n';  commands.pop();   }
+                        {
+                            const std::string outStr = commands.front() + (((commands.size() - 1) != 0)? ", " : "\n");
+                            std::cout << outStr;
+                            file << outStr;
+                            commands.pop();
+                        }
+                        file.close();
                     };
                     while (std::getline(std::cin, currCommand))
                     {
@@ -45,8 +65,8 @@ int main(int argc, const char* argv[])
                             ++cntUnfinishedBraces;
 
                             if (cntUnfinishedBraces == 1)
-                            {
-                                outputInstant(poolCommands);
+                            {                                
+                                outputInstant(timeFirstCommandGeneralOut, poolCommands);
                             }
 
                             continue;
@@ -57,30 +77,52 @@ int main(int argc, const char* argv[])
 
                             if (cntUnfinishedBraces == 0)
                             {
-                                outputInstant(poolSubCommands);
+                                outputInstant(timeFirstCommandInstantOut, poolSubCommands);
                             }
 
                             continue;
                         }
 
                         if (cntUnfinishedBraces >= 1)
-                        {   poolSubCommands.push(currCommand);  }
+                        {
+                            poolSubCommands.push(currCommand);
+                        }
                         else
                         {
                             poolCommands.push(currCommand);
+                        }
+
+                        if (poolSubCommands.size() == 1)
+                        {
+                            timeFirstCommandInstantOut = time(nullptr);
+                        }
+                        if (poolCommands.size() == 1)
+                        {
+                            timeFirstCommandGeneralOut = time(nullptr);
                         }
 
                         if ((poolCommands.size() % cntCommands) == 0)
                         {
                             if (poolCommands.size() >= cntCommands)
                             {
+                                std::ofstream file(projName + std::to_string(static_cast<ulong>(timeFirstCommandGeneralOut)) + ".log");
+
+                                std::cout << projName + ": ";
+                                file << projName + ": ";
                                 for (size_t i = 0; i < cntCommands; ++i)
-                                {   std::cout << poolCommands.front() << '\n';  poolCommands.pop();   }
+                                {
+                                    const std::string outStr = poolCommands.front() + (((i + 1) < cntCommands)? ", " : "\n");
+                                    std::cout << outStr;
+                                    file << outStr;
+
+                                    poolCommands.pop();
+                                }
+                                file.close();
                             }
                         }
                     }
 
-                    outputInstant(poolCommands);
+                    outputInstant(timeFirstCommandGeneralOut, poolCommands);
                 }
             }
 
