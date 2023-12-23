@@ -4,190 +4,212 @@
 
 #include <gtest/gtest.h>
 
-//{
-//    std::cout << "Constructions project of objects:\n\n";
+const char* testArgv[] = {"path", "3"};
 
-//    // бесконечная матрица int заполнена значениями -1
-//    Matrix<int, -1> matrix;
+TEST(Test_static_input, Subtest_1)
+{
+    std::unique_ptr<LoggerFixedCntCMDs> genLogger = std::make_unique<LoggerFixedCntCMDs>(std::stoi(static_cast<std::string>(testArgv[1])));
+    std::unique_ptr<LoggerRemainingCMDs> otherLogger = std::make_unique<LoggerRemainingCMDs>();
 
+    std::string currCommand;
+    std::queue<std::string> listCommands;
+    listCommands.push("cmd1");
+    listCommands.push("cmd2");
+    listCommands.push("cmd3");
+    listCommands.push("cmd4");
+    listCommands.push("cmd5");
+    size_t cntUnfinishedBraces = 0;
+    size_t t_currCountCommands = 0;
 
-//    std::cout << "\nWork part:\n\n";
+    /*!
+        Логика работы для статических блоков (в примере N == 3):
 
-//    assert(matrix.size() == 0); // все ячейки свободны
+        ./bulk 3
+        Ввод    Вывод                   Комментарий
+        cmd1
+        cmd2
+        cmd3
+                bulk: cmd1, cmd2, cmd3  Блок завершён – выводим блок.
+        cmd4
+        cmd5
+        EOF
+                bulk: cmd4, cmd5        Конец ввода – принудительно завершаем блок.
+    */
 
-//    matrix[1][2] = 8;
-//    matrix[1][2] = 8;
+    while (!listCommands.empty())
+    {
+        currCommand = listCommands.front();
+        listCommands.pop();
 
-//    assert(matrix.size() == 1);
-//    assert(matrix[1][2] == 8);
-
-//    auto a = matrix[1][2];
-
-//    assert(a == 8);
-//    assert(matrix.size() == 1);
-
-//    matrix[100][100] = 314;
-//    assert(matrix[100][100] == 314);
-//    assert(matrix.size() == 2);
-
-//    ((matrix[100][101] = 314) = 0) = 217;
-//    assert(matrix.size() == 3);
-
-////        // 100100314
-//    for(auto item: matrix)
-//    {
-//        int x;
-//        int y;
-//        int v;
-//        std::tie(x, y, v) = item;
-//        std::cout << x << y << v << std::endl;
-//    }
-
-//    std::cout << "\n\nDestructions objects:\n";
-//}
-
-//TEST(Inittialization, Subtest_1)
-//{
-//    // бесконечная матрица int заполнена значениями -1
-//    Matrix<int, -1> matrix;
-
-//    EXPECT_EQ(matrix.size(), 0);    // все ячейки свободны
-//}
-
-//TEST(TestGroupName, Subtest_2)
-//{
-//    // бесконечная матрица int заполнена значениями -1
-//    Matrix<int, -1> matrix;
-
-//    EXPECT_EQ(matrix.size(), 0);    // все ячейки свободны
-
-//    // ---------
-
-//    matrix[1][2] = 8;
-//    matrix[1][2] = 9;
-
-//    EXPECT_EQ(matrix.size(), 1);    // нет дубляжей
-//    EXPECT_TRUE(matrix[1][2] == 9); //
-//}
-
-//TEST(TestGroupName, Subtest_3)
-//{
-//    // бесконечная матрица int заполнена значениями -1
-//    Matrix<int, -1> matrix;
-
-//    EXPECT_EQ(matrix.size(), 0);    // все ячейки свободны
-
-//    // ---------
-
-//    matrix[1][2] = 8;
-//    matrix[1][2] = 9;
-
-//    EXPECT_EQ(matrix.size(), 1);    // нет дубляжей
-//    EXPECT_TRUE(matrix[1][2] == 9);
-
-//    // ---------
-
-//    auto a = matrix[1][2];
-
-//    EXPECT_TRUE(a == 9);                // проверка возврата ссылки из операторов
-//    EXPECT_EQ(matrix.size(), 1);    // сверка текущего размера
-//}
-
-//TEST(TestGroupName, Subtest_4)
-//{
-//    // бесконечная матрица int заполнена значениями -1
-//    Matrix<int, -1> matrix;
-
-//    EXPECT_EQ(matrix.size(), 0);    // все ячейки свободны
-
-//    // ---------
-
-//    matrix[1][2] = 8;
-//    matrix[1][2] = 9;
-
-//    EXPECT_EQ(matrix.size(), 1);    // нет дубляжей
-//    EXPECT_TRUE(matrix[1][2] == 9);
-
-//    // ---------
-
-//    auto a = matrix[1][2];
-
-//    EXPECT_TRUE(a == 9);                // проверка возврата ссылки из операторов
-//    EXPECT_EQ(matrix.size(), 1);    // сверка текущего размера
-
-//    // ---------
-
-//    matrix[100][100] = 314;
-
-//    EXPECT_TRUE(matrix[100][100] == 314);
-//    EXPECT_EQ(matrix.size(), 2);    // сверка текущего размера
+        if (currCommand.empty())
+        {   break;   }
 
 
+        if (currCommand == "{")
+        {
+            ++cntUnfinishedBraces;
 
-//    ((matrix[100][101] = 314) = 0) = 217;   // проверка возврата ссылки из операторов. И перезаписи её значения
-//    EXPECT_EQ(matrix.size(), 3);            // сверка текущего размера
-//    EXPECT_TRUE(matrix[100][101] == 217);
-//}
+            if (cntUnfinishedBraces == 1)
+            {
+                EXPECT_EQ(genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING), "");
+            }
 
-//TEST(TestGroupName, Subtest_5)
-//{
-//    // бесконечная матрица int заполнена значениями -1
-//    Matrix<int, -1> matrix;
+            continue;
+        }
+        if (currCommand == "}")
+        {
+            --cntUnfinishedBraces;
 
-//    EXPECT_EQ(matrix.size(), 0);    // все ячейки свободны
+            if (cntUnfinishedBraces == 0)
+            {
+                EXPECT_EQ(otherLogger->logMessage(), "");
+            }
 
-//    // ---------
+            continue;
+        }
 
-//    matrix[1][2] = 8;
-//    matrix[1][2] = 9;
+        EXPECT_EQ(cntUnfinishedBraces, 0);
 
-//    EXPECT_EQ(matrix.size(), 1);    // нет дубляжей
-//    EXPECT_TRUE(matrix[1][2] == 9);
+        if (cntUnfinishedBraces >= 1)
+        {
+            otherLogger->pushCommand(currCommand);
+            EXPECT_EQ(otherLogger->countCommands(), 0);
+        }
+        else
+        {
+            ++t_currCountCommands;
+            genLogger->pushCommand(currCommand);
+            EXPECT_EQ(genLogger->countCommands(), t_currCountCommands);
+        }
 
-//    // ---------
-
-//    auto a = matrix[1][2];
-
-//    EXPECT_TRUE(a == 9);                // проверка возврата ссылки из операторов
-//    EXPECT_EQ(matrix.size(), 1);        // сверка текущего размера
-
-//    // ---------
-
-//    matrix[100][100] = 314;
-
-//    EXPECT_TRUE(matrix[100][100] == 314);
-//    EXPECT_EQ(matrix.size(), 2);            // сверка текущего размера
-
-
-
-//    ((matrix[100][101] = 314) = 0) = 217;   // проверка возврата ссылки из операторов. И перезаписи её значения
-//    EXPECT_EQ(matrix.size(), 3);            // сверка текущего размера
-//    EXPECT_TRUE(matrix[100][101] == 217);
-
-//    // ---------
-
-//    // проверка вывода значение с использованием for-range (begin(), end(), cbegin(), cend())
-//    for(auto item: matrix)
-//    {
-//        int x;
-//        int y;
-//        int v;
-//        std::tie(x, y, v) = item; // проверка вывода с использованием tuple
-//        std::cout << x << y << v << std::endl;
-//    }
-//}
-
-//TEST(TestGroupName, Subtest_20)
-//{
-////    EXPECT_NO_THROW(
-////        projModel->callSignalAddElem(TypeElem::RECT); // simulation call signal
-////            );
-
-////    EXPECT_NO_THROW(
-////        projModel->callSignalRemElem(0); // simulation call signal
-////            );
+        if (genLogger->countCommands() == 3)
+        {
+            EXPECT_EQ(genLogger->logMessage(), "bulk: cmd1, cmd2, cmd3\n");
+            EXPECT_EQ(genLogger->countCommands(), 0);
+            t_currCountCommands = 0;
+        }
+        else
+        {
+            EXPECT_EQ(genLogger->logMessage(), "");
+        }
+    }
+    EXPECT_EQ(genLogger->countCommands(), 2);
+    EXPECT_EQ(genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING), "bulk: cmd4, cmd5\n");
+    EXPECT_EQ(genLogger->countCommands(), 0);
+}
 
 
-//    std::cout << "\n";
-//}
+TEST(Test_dynamic_input, Subtest_2)
+{
+    std::unique_ptr<LoggerFixedCntCMDs> genLogger = std::make_unique<LoggerFixedCntCMDs>(std::stoi(static_cast<std::string>(testArgv[1])));
+    std::unique_ptr<LoggerRemainingCMDs> otherLogger = std::make_unique<LoggerRemainingCMDs>();
 
+    std::string currCommand;
+    std::queue<std::string> listCommands;
+    listCommands.push("cmd1");
+    listCommands.push("cmd2");
+    listCommands.push("{");
+    listCommands.push("cmd3");
+    listCommands.push("cmd4");
+    listCommands.push("}");
+    listCommands.push("{");
+    listCommands.push("cmd5");
+    listCommands.push("cmd6");
+    listCommands.push("{");
+    listCommands.push("cmd7");
+    listCommands.push("cmd8");
+    listCommands.push("}");
+    listCommands.push("cmd9");
+    listCommands.push("}");
+    listCommands.push("{");
+    listCommands.push("cmd10");
+    listCommands.push("cmd11");
+
+    size_t cntUnfinishedBraces = 0;
+    size_t t_currCountGenCommands = 0;
+    size_t t_currCountAddCommands = 0;
+
+    /*!
+        Логика работы для статических блоков (в примере N == 3):
+
+        ./bulk 3
+
+        Ввод    Вывод                   Комментарий
+        cmd1
+        cmd2
+        {
+                bulk: cmd1, cmd2        Начало динамического блока – выводим предыдущий статический досрочно
+        cmd3
+        cmd4
+        }
+                bulk: cmd3, cmd4
+        {
+        cmd5
+        cmd6
+        {                               Игнорируем вложенные команды.
+        cmd7
+        cmd8
+        }                               Игнорируем вложенные команды.
+        cmd9
+        }
+                bulk: cmd5, cmd6,       Конец динамического блока – выводим.
+                cmd7, cmd8, cmd9
+        {
+        cmd10                           Конец ввода – динамический блок игнорируется, не выводим
+        cmd11
+        EOF
+    */
+
+    while (!listCommands.empty())
+    {
+        currCommand = listCommands.front();
+        listCommands.pop();
+
+        if (currCommand.empty())
+        {   break;   }
+
+
+        if (currCommand == "{")
+        {
+            ++cntUnfinishedBraces;
+
+            if (cntUnfinishedBraces == 1)
+            {
+                EXPECT_EQ(genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING), "bulk: cmd1, cmd2\n");
+                t_currCountGenCommands = 0;
+            }
+
+            continue;
+        }
+        if (currCommand == "}")
+        {
+            --cntUnfinishedBraces;
+
+            if (cntUnfinishedBraces == 0)
+            {
+                EXPECT_EQ(otherLogger->logMessage(), "bulk: cmd3, cmd4\n");
+                t_currCountAddCommands = 0;
+            }
+
+            continue;
+        }
+
+        if (cntUnfinishedBraces >= 1)
+        {
+            ++t_currCountAddCommands;
+            otherLogger->pushCommand(currCommand);
+            EXPECT_EQ(otherLogger->countCommands(), t_currCountAddCommands);
+        }
+        else
+        {
+            ++t_currCountGenCommands;
+            genLogger->pushCommand(currCommand);
+            EXPECT_EQ(genLogger->countCommands(), t_currCountGenCommands);
+        }
+
+       EXPECT_EQ(genLogger->logMessage(), "");
+    }
+    EXPECT_EQ(genLogger->countCommands(), 0);
+    EXPECT_EQ(genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING), "");
+    EXPECT_EQ(genLogger->countCommands(), 0);
+}
