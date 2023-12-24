@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['matrix_28',['Matrix',['../classMatrix.html',1,'']]]
+  ['logger_24',['Logger',['../classLogger.html',1,'']]],
+  ['loggerfixedcntcmds_25',['LoggerFixedCntCMDs',['../classLoggerFixedCntCMDs.html',1,'']]],
+  ['loggerremainingcmds_26',['LoggerRemainingCMDs',['../classLoggerRemainingCMDs.html',1,'']]]
 ];

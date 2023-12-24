@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['node_43',['Node',['../structMatrix_1_1Node.html#ac8f7d02e6b549412c3e714663d41cb04',1,'Matrix::Node::Node(T i_=0, T j_=0, T value_=0)'],['../structMatrix_1_1Node.html#aa5ad10626e331315ddee15018ffd424c',1,'Matrix::Node::Node(Matrix *parent_, T value_, T i_=0, T j_=0)']]]
+  ['test_39',['TEST',['../test__main__google_8cpp.html#ace6d4ac6e9d2d95b297aa52d80fa0a4b',1,'TEST(Test_static_input, Subtest_1):&#160;test_main_google.cpp'],['../test__main__google_8cpp.html#aecd152d544b65a34242c8cf13efef2c9',1,'TEST(Test_dynamic_input, Subtest_2):&#160;test_main_google.cpp']]]
 ];

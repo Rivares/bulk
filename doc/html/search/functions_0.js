@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['begin_37',['begin',['../classMatrix.html#a9f33e720c114b3512654ca0980cd3e47',1,'Matrix']]]
+  ['countcommands_32',['countCommands',['../classLogger.html#aa93d62c20ec3f13775df112c80151c31',1,'Logger']]]
 ];

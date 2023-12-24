@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['operator_21_3d_44',['operator!=',['../structMatrix_1_1Node.html#a8b22fe2c0ea6c1f483edb5bb969fda93',1,'Matrix::Node']]],
-  ['operator_28_29_45',['operator()',['../structMatrix_1_1NodeHash.html#addd66e1700ef860a4ec6af02bc677b2c',1,'Matrix::NodeHash::operator()()'],['../structMatrix_1_1NodeEqual.html#a651cccb7262b617e5a16a6615096021d',1,'Matrix::NodeEqual::operator()()']]],
-  ['operator_3d_46',['operator=',['../structMatrix_1_1Node.html#a2c910261de588c479d022240b3c52088',1,'Matrix::Node']]],
-  ['operator_3d_3d_47',['operator==',['../structMatrix_1_1Node.html#a06c319849c24eadba23515660461ff79',1,'Matrix::Node']]],
-  ['operator_5b_5d_48',['operator[]',['../structMatrix_1_1Node.html#a6f0cec522b89629a36f37c1f7aa06084',1,'Matrix::Node::operator[]()'],['../classMatrix.html#a90ab034e68001dcfde98a01cc57eae63',1,'Matrix::operator[]()']]]
+  ['_7elogger_40',['~Logger',['../classLogger.html#ae93f62ca3e47716b7120acb032a260f3',1,'Logger']]],
+  ['_7eloggerfixedcntcmds_41',['~LoggerFixedCntCMDs',['../classLoggerFixedCntCMDs.html#aa6774792e03c4131cbc006a030d3af2a',1,'LoggerFixedCntCMDs']]],
+  ['_7eloggerremainingcmds_42',['~LoggerRemainingCMDs',['../classLoggerRemainingCMDs.html#ad160e3f93f7eaaa645fdb942639a5dcf',1,'LoggerRemainingCMDs']]]
 ];

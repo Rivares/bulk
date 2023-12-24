@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>matrix: main.cpp File Reference</title>
+<title>bulk: main.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">matrix
+   <div id="projectname">bulk
    &#160;<span id="projectnumber">1.0</span>
    </div>
    <div id="projectbrief">Implementation output ip addresses with SFINAE</div>
@@ -71,35 +71,33 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;gperftools/profiler.h&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
-<code>#include &lt;unordered_set&gt;</code><br />
-<code>#include &lt;cassert&gt;</code><br />
-<code>#include &lt;string&gt;</code><br />
-<code>#include &lt;tuple&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 <code>#include &quot;<a class="el" href="lib_8hpp_source.html">lib.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for main.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="main_8cpp__incl.png" border="0" usemap="#amain_8cpp" alt=""/></div>
 <map name="amain_8cpp" id="amain_8cpp">
-<area shape="rect" title=" " alt="" coords="318,5,401,32"/>
+<area shape="rect" title=" " alt="" coords="218,5,301,32"/>
 <area shape="rect" title=" " alt="" coords="5,155,153,181"/>
 <area shape="rect" title=" " alt="" coords="178,155,258,181"/>
-<area shape="rect" title=" " alt="" coords="282,155,397,181"/>
-<area shape="rect" title=" " alt="" coords="518,80,587,107"/>
-<area shape="rect" title=" " alt="" coords="421,155,479,181"/>
-<area shape="rect" title=" " alt="" coords="504,155,559,181"/>
-<area shape="rect" href="lib_8hpp.html" title=" " alt="" coords="326,80,393,107"/>
+<area shape="rect" title=" " alt="" coords="365,80,442,107"/>
+<area shape="rect" href="lib_8hpp.html" title=" " alt="" coords="274,80,341,107"/>
+<area shape="rect" title=" " alt="" coords="453,155,527,181"/>
+<area shape="rect" title=" " alt="" coords="551,155,610,181"/>
+<area shape="rect" title=" " alt="" coords="283,155,345,181"/>
+<area shape="rect" title=" " alt="" coords="370,155,429,181"/>
 </map>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a> ()</td></tr>
-<tr class="separator:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0f2228420376f4db7e1274f2b41667c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#ac0f2228420376f4db7e1274f2b41667c">main</a> (int argc, const char *argv[])</td></tr>
+<tr class="separator:ac0f2228420376f4db7e1274f2b41667c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ae66f6b31b5ad750f1fe042a706a4e3d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae66f6b31b5ad750f1fe042a706a4e3d4">&#9670;&nbsp;</a></span>main()</h2>
+<a id="ac0f2228420376f4db7e1274f2b41667c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0f2228420376f4db7e1274f2b41667c">&#9670;&nbsp;</a></span>main()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -107,13 +105,31 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int main </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>argc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>argv</em>[]&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Спроектировать 2-мерную разреженную бесконечную матрицу, заполненную значениями по умолчанию. Матрица должна хранить только занятые элементы - значения которых хотя бы раз присваивались. Присвоение в ячейку значения по умолчанию освобождает ячейку. Необходимо уметь отвечать на вопрос - сколько ячеек реально занято? Необходимо уметь проходить по всем занятым ячейкам. Порядок не имеет значения. Возвращается позиция ячейки и ее значение. При чтении элемента из свободной ячейки возвращать значение по умолчанию.</p>
-<p>При запуске программы необходимо создать матрицу с пустым значением 0, заполнить главную диагональ матрицы (от [0,0] до [9,9]) значениями от 0 до 9. Второстепенную диагональ (от [0,9] до [9,0]) значениями от 9 до 0. Необходимо вывести фрагмент матрицы от [1,1] до [8,8]. Между столбцами пробел. Каждая строка матрицы на новой строке консоли. Вывести количество занятых ячеек. Вывести все занятые ячейки вместе со своими позициями. Опционально реализовать N-мерную матрицу. Опционально реализовать каноническую форму оператора <code>=</code>, допускающую выражения <code>((matrix[100][100] = 314) = 0) = 217</code></p>
+<p>Разработать программу для пакетной обработки команд. Команды считываются построчно из стандартного ввода и обрабатываются блоками по N команд. Одна команда - одна строка, конкретное значение роли не играет. Если данные закончились - блок завершается принудительно. Параметр N передается как единственный параметр командной строки в виде целого числа.</p>
+<p>Вместе с выводом в консоль блоки должны сохранятся в отдельные файлы с именами bulk1517223860.log , где 1517223860 - это время получения первой команды из блока. По одному файлу на блок.</p>
+<p>Collecting args</p>
+<p>Текущая комманда</p>
+<p>Подсчёт скобок по принципу стека</p>
+<p>Вывод оставшихся комманд из статического блока</p>
+<p>Вывод комманд из динамического блока, когда ввод закончен</p>
+<p>Ввод комманд из динамического и статического блоков</p>
+<p>Вывод фиксированного кол-ва комманд из статического блока</p>
 
 </div>
 </div>

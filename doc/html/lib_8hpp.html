@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>matrix: lib.hpp File Reference</title>
+<title>bulk: lib.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">matrix
+   <div id="projectname">bulk
    &#160;<span id="projectnumber">1.0</span>
    </div>
    <div id="projectbrief">Implementation output ip addresses with SFINAE</div>
@@ -71,20 +71,22 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;gperftools/profiler.h&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
-<code>#include &lt;unordered_set&gt;</code><br />
+<code>#include &lt;fstream&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
-<code>#include &lt;tuple&gt;</code><br />
+<code>#include &lt;queue&gt;</code><br />
+<code>#include &lt;ctime&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for lib.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="lib_8hpp__incl.png" border="0" usemap="#alib_8hpp" alt=""/></div>
 <map name="alib_8hpp" id="alib_8hpp">
-<area shape="rect" title=" " alt="" coords="306,5,373,32"/>
+<area shape="rect" title=" " alt="" coords="331,5,398,32"/>
 <area shape="rect" title=" " alt="" coords="5,80,153,107"/>
 <area shape="rect" title=" " alt="" coords="178,80,258,107"/>
-<area shape="rect" title=" " alt="" coords="282,80,397,107"/>
-<area shape="rect" title=" " alt="" coords="421,80,479,107"/>
-<area shape="rect" title=" " alt="" coords="504,80,559,107"/>
+<area shape="rect" title=" " alt="" coords="283,80,356,107"/>
+<area shape="rect" title=" " alt="" coords="381,80,439,107"/>
+<area shape="rect" title=" " alt="" coords="464,80,527,107"/>
+<area shape="rect" title=" " alt="" coords="551,80,610,107"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -103,13 +105,11 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMatrix.html">Matrix&lt; T, value &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLogger.html">Logger</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMatrix_1_1Node.html">Matrix&lt; T, value &gt;::Node</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLoggerFixedCntCMDs.html">LoggerFixedCntCMDs</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMatrix_1_1NodeHash.html">Matrix&lt; T, value &gt;::NodeHash</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMatrix_1_1NodeEqual.html">Matrix&lt; T, value &gt;::NodeEqual</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLoggerRemainingCMDs.html">LoggerRemainingCMDs</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
