@@ -7,6 +7,9 @@
 #include <ctime>
 
 
+/*!
+    Логика структуры - простое наследование с разграничением функционала по классам
+*/
 
 class Logger
 {
@@ -23,6 +26,11 @@ public:
     virtual ~Logger()
     {   /*std::cout << __PRETTY_FUNCTION__ << '\n';*/   }
 
+    /*!
+        Функция void pushCommand(const std::string& command)
+        - добавление новой комманды в очередь std::queue<std::string> commands
+        и фиксация времени поступления первой комманды time_t timeFirstCommandOut
+    */
     void pushCommand(const std::string& command)
     {
         if (command.empty())
@@ -34,9 +42,14 @@ public:
         {   timeFirstCommandOut = time(nullptr); }
     }
 
+    /*!
+        Функция size_t countCommands() const)
+        - получение текущего кол-ва комманд из очереди std::queue<std::string> commands
+    */
     size_t countCommands() const
     {   return commands.size(); }
 };
+
 
 class LoggerFixedCntCMDs : public Logger
 {
@@ -58,6 +71,12 @@ public:
     ~LoggerFixedCntCMDs() override
     {   /*std::cout << __PRETTY_FUNCTION__ << '\n';*/   }
 
+    /*!
+        Функция std::string logMessage(Mode currModeOutput = Mode::GEN)
+        - вывод комманд из очереди std::queue<std::string> commands в двух режимах:
+        1) Mode::GEN - позволяет вывести только фиксированное кол-во комманд из очереди.
+        2) Mode::REMAINING - позволяет вывести оставшиеся комманды из очереди.
+    */
     std::string logMessage(Mode currModeOutput = Mode::GEN)
     {
         if (commands.size() == 0)
@@ -104,6 +123,10 @@ public:
     ~LoggerRemainingCMDs() override
     {   /*std::cout << __PRETTY_FUNCTION__ << '\n';*/   }
 
+    /*!
+        Функция std::string logMessage()
+        - вывод всех комманд из очереди std::queue<std::string> commands.
+    */
     std::string logMessage()
     {
         if (commands.size() == 0)

@@ -22,7 +22,7 @@ TEST(Test_static_input, Subtest_1)
     size_t t_currCountCommands = 0;
 
     /*!
-        Логика работы для статических блоков (в примере N == 3):
+     *  Проверка работы логики отвечающей вывод при статическом вводе (в примере N == 3):
 
         ./bulk 3
         Ввод    Вывод                   Комментарий
@@ -130,7 +130,7 @@ TEST(Test_dynamic_input, Subtest_2)
     size_t t_currCountAddCommands = 0;
 
     /*!
-        Логика работы для статических блоков (в примере N == 3):
+     *  Проверка работы логики отвечающей вывод при динамическом вводе (в примере N == 3):
 
         ./bulk 3
 
@@ -175,8 +175,16 @@ TEST(Test_dynamic_input, Subtest_2)
 
             if (cntUnfinishedBraces == 1)
             {
-                EXPECT_EQ(genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING), "bulk: cmd1, cmd2\n");
+                if (t_currCountGenCommands == 2)
+                {
+                    EXPECT_EQ(genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING), "bulk: cmd1, cmd2\n");
+                }
+                else
+                {
+                    EXPECT_EQ(genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING), "");
+                }
                 t_currCountGenCommands = 0;
+                EXPECT_EQ(genLogger->countCommands(), t_currCountGenCommands);
             }
 
             continue;
@@ -187,8 +195,16 @@ TEST(Test_dynamic_input, Subtest_2)
 
             if (cntUnfinishedBraces == 0)
             {
-                EXPECT_EQ(otherLogger->logMessage(), "bulk: cmd3, cmd4\n");
+                if (t_currCountAddCommands == 2)
+                {
+                    EXPECT_EQ(otherLogger->logMessage(), "bulk: cmd3, cmd4\n");
+                }
+                else
+                {
+                    EXPECT_EQ(otherLogger->logMessage(), "bulk: cmd5, cmd6, cmd7, cmd8, cmd9\n");
+                }
                 t_currCountAddCommands = 0;
+                EXPECT_EQ(genLogger->countCommands(), t_currCountAddCommands);
             }
 
             continue;

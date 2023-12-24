@@ -37,8 +37,8 @@ int main(int argc, const char* argv[])
                 std::unique_ptr<LoggerFixedCntCMDs> genLogger = std::make_unique<LoggerFixedCntCMDs>(std::stoi(static_cast<std::string>(argv[1])));
                 std::unique_ptr<LoggerRemainingCMDs> otherLogger = std::make_unique<LoggerRemainingCMDs>();
 
-                std::string currCommand = "";
-                size_t cntUnfinishedBraces = 0;
+                std::string currCommand = "";   /// Текущая комманда
+                size_t cntUnfinishedBraces = 0; /// Подсчёт скобок по принципу стека
 
                 while (std::getline(std::cin, currCommand))
                 {
@@ -51,6 +51,9 @@ int main(int argc, const char* argv[])
 
                         if (cntUnfinishedBraces == 1)
                         {
+                            /*!
+                                Вывод оставшихся комманд из статического блока
+                            */
                             genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING);
                         }
 
@@ -62,13 +65,18 @@ int main(int argc, const char* argv[])
 
                         if (cntUnfinishedBraces == 0)
                         {
+                            /*!
+                                Вывод комманд из динамического блока, когда ввод закончен
+                            */
                             otherLogger->logMessage();
                         }
 
                         continue;
                     }
 
-
+                    /*!
+                        Ввод комманд из динамического и статического блоков
+                    */
                     if (cntUnfinishedBraces >= 1)
                     {
                         otherLogger->pushCommand(currCommand);
@@ -78,6 +86,9 @@ int main(int argc, const char* argv[])
                         genLogger->pushCommand(currCommand);
                     }
 
+                    /*!
+                        Вывод фиксированного кол-ва комманд из статического блока
+                    */
                     genLogger->logMessage();
                 }
                 genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING);
