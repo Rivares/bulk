@@ -56,14 +56,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bulk-0.0.${{ github.run_number }}-Linux.deb
-          asset_name: bulk-0.0.${{ github.run_number }}-Linux.deb
+          asset_path: ./bulk_async-0.0.${{ github.run_number }}-Linux.deb
+          asset_name: bulk_async-0.0.${{ github.run_number }}-Linux.deb
           asset_content_type: application/vnd.debian.binary-package
       - name: Upload deb package for job_run
         uses: actions/upload-artifact@v3
         with:
           name: package
-          path: ./bulk-0.0.${{ github.run_number }}-Linux.deb
+          path: ./bulk_async-0.0.${{ github.run_number }}-Linux.deb
   job_run:
     needs: [job_build]
     runs-on: ubuntu-latest
@@ -74,10 +74,10 @@ jobs:
           name: package
       - shell: bash
         run: |
-          sudo apt install ./bulk-0.0.${{ github.run_number }}-Linux.deb
+          sudo apt install ./bulk_async-0.0.${{ github.run_number }}-Linux.deb
       - name: Checking
         run: |
-          sudo cat bulk | md5sum
+          sudo cat bulk_async | md5sum
 
   job_docs:
     needs: [job_build]

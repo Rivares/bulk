@@ -9,7 +9,7 @@ set(SOURCES
 
 add_executable(${package_name} ${SOURCES})
 
-set_target_properties(bulk PROPERTIES
+set_target_properties(bulk_async PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
 )

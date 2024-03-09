@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 
-set(PROJECT_NAME "bulk")
+set(PROJECT_NAME "bulk_async")
 
 project(${PROJECT_NAME} LANGUAGES CXX)
 set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
@@ -18,6 +18,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -O1")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pg")
@@ -29,7 +30,7 @@ find_package(Boost 1.30 REQUIRED COMPONENTS program_options)
 
 add_executable(${PROJECT_NAME}
     main.cpp
-    lib.hpp
+    async.hpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
