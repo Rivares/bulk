@@ -3,8 +3,15 @@
 #include <iostream>
 #include <memory>
 
-#include "async.hpp"
+#include "asyncN.hpp"
 
+#include <thread>
+
+//struct Bulk;
+//extern Bulk bulk;
+//size_t connect(size_t N);
+//void receive(const char *buff, size_t buff_size, const size_t &id);
+//void disconnect(const size_t &id);
 
 
 
@@ -21,12 +28,9 @@
 //6. Данные подаются порциями в разных контекстах в большом объёме без пауз.
 
 
-
-
-
-int main(int argc, const char* argv[])
+int main([[maybe_unused]] int argc, [[maybe_unused]] const char* argv[])
 {
-    ProfilerStart("bulk.prof");
+    ProfilerStart("bulk_async.prof");
 
 ///    Разработать программу для пакетной обработки команд.
 ///    Команды считываются построчно из стандартного ввода и обрабатываются блоками по N команд.
@@ -46,73 +50,134 @@ int main(int argc, const char* argv[])
 
     try
     {
-        if (argc > 0)
         {
-            if (argv)
-            {
-                std::cout << "Constructions project of objects:\n\n";
+            auto id3 = connect(3);
 
-                std::unique_ptr<LoggerFixedCntCMDs> genLogger = std::make_unique<LoggerFixedCntCMDs>(std::stoi(static_cast<std::string>(argv[1])));
-                std::unique_ptr<LoggerRemainingCMDs> otherLogger = std::make_unique<LoggerRemainingCMDs>();
+            receive("cmd1", 4, id3);
+            receive("cmd2", 4, id3);
+            receive("{", 1, id3);
+            receive("cmd3", 4, id3);
+            receive("cmd4", 4, id3);
+            receive("}", 1, id3);
+            receive("{", 1, id3);
+            receive("cmd5", 4, id3);
+            receive("cmd6", 4, id3);
+            receive("{", 1, id3);
+            receive("cmd7", 4, id3);
+            receive("cmd8", 4, id3);
+            receive("}", 1, id3);
+            receive("cmd9", 4, id3);
+            receive("}", 1, id3);
+            receive("{", 1, id3);
+            receive("cmd10", 4, id3);
+            receive("cmd11", 4, id3);
 
-                std::string currCommand = "";   /// Текущая комманда
-                size_t cntUnfinishedBraces = 0; /// Подсчёт скобок по принципу стека
+            auto id4 = connect(4);
+            receive("cmd1", 4, id4);
+            receive("cmd2", 4, id4);
+            receive("{", 1, id4);
+            receive("cmd3", 4, id4);
+            receive("cmd4", 4, id4);
+            receive("}", 1, id4);
+            receive("{", 1, id4);
+            receive("cmd5", 4, id4);
+            receive("cmd6", 4, id4);
+            receive("{", 1, id4);
+            receive("cmd7", 4, id4);
+            receive("cmd8", 4, id4);
+            receive("}", 1, id4);
+            receive("cmd9", 4, id4);
+            receive("}", 1, id4);
+            receive("{", 1, id4);
+            receive("cmd10", 4, id4);
+            receive("cmd11", 4, id4);
 
-                while (std::getline(std::cin, currCommand))
-                {
-                    if (currCommand.empty())
-                    {   break;   }
+            disconnect(id3);
+            disconnect(id4);
 
-                    if (currCommand == "{")
-                    {
-                        ++cntUnfinishedBraces;
 
-                        if (cntUnfinishedBraces == 1)
-                        {
-                            /*!
-                                Вывод оставшихся комманд из статического блока
-                            */
-                            genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING);
-                        }
+//            std::unique_ptr<LoggerFixedCntCMDs> genLogger = std::make_unique<LoggerFixedCntCMDs>(std::stoi(static_cast<std::string>(argv[1])));
+//            std::unique_ptr<LoggerRemainingCMDs> otherLogger = std::make_unique<LoggerRemainingCMDs>();
 
-                        continue;
-                    }
-                    if (currCommand == "}")
-                    {
-                        --cntUnfinishedBraces;
+//            std::string currCommand = "";   /// Текущая комманда
+//            size_t cntUnfinishedBraces = 0; /// Подсчёт скобок по принципу стека
 
-                        if (cntUnfinishedBraces == 0)
-                        {
-                            /*!
-                                Вывод комманд из динамического блока, когда ввод закончен
-                            */
-                            otherLogger->logMessage();
-                        }
+//            while (std::getline(std::cin, currCommand))
+//            {
+//                if (currCommand.empty())
+//                {   break;   }
 
-                        continue;
-                    }
+//                if (currCommand == "{")
+//                {
+//                    ++cntUnfinishedBraces;
 
-                    /*!
-                        Ввод комманд из динамического и статического блоков
-                    */
-                    if (cntUnfinishedBraces >= 1)
-                    {
-                        otherLogger->pushCommand(currCommand);
-                    }
-                    else
-                    {
-                        genLogger->pushCommand(currCommand);
-                    }
+//                    if (cntUnfinishedBraces == 1)
+//                    {
+//                        /*!
+//                            Вывод оставшихся комманд из статического блока
+//                        */
+//                        genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING);
+//                    }
 
-                    /*!
-                        Вывод фиксированного кол-ва комманд из статического блока
-                    */
-                    genLogger->logMessage();
-                }
-                genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING);
-            }
+//                    continue;
+//                }
+//                if (currCommand == "}")
+//                {
+//                    --cntUnfinishedBraces;
+
+//                    if (cntUnfinishedBraces == 0)
+//                    {
+//                        /*!
+//                            Вывод комманд из динамического блока, когда ввод закончен
+//                        */
+//                        otherLogger->logMessage();
+//                    }
+
+//                    continue;
+//                }
+
+//                /*!
+//                    Ввод комманд из динамического и статического блоков
+//                */
+//                if (cntUnfinishedBraces >= 1)
+//                {
+//                    otherLogger->pushCommand(currCommand);
+//                }
+//                else
+//                {
+//                    genLogger->pushCommand(currCommand);
+//                }
+
+//                /*!
+//                    Вывод фиксированного кол-ва комманд из статического блока
+//                */
+//                genLogger->logMessage();
+//            }
+//            genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING);
+
         }
-        std::cout << "\n\nDestructions objects:\n";
+
+        {
+            const std::size_t numberOfCommandsPerThread = 1;//10;
+
+            auto worker = [numberOfCommandsPerThread](std::size_t threadNum, std::size_t blockSize) {
+                auto handle = connect(blockSize);
+                for (std::size_t i = 0; i < numberOfCommandsPerThread; ++i) {
+                    std::string command{"cmd"};
+                    command += std::to_string(i + 1) + "_" + std::to_string(threadNum);
+                    receive(command.data(), command.size(), handle);
+                }
+                disconnect(handle);
+            };
+
+            std::thread t1(worker, 0, 1);
+            std::thread t2(worker, 1, 3);
+            std::thread t3(worker, 2, 5);
+
+            t1.join();
+            t2.join();
+            t3.join();
+        }
     }
     catch (const std::exception& except)
     {

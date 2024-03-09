@@ -31,6 +31,8 @@ find_package(Boost 1.30 REQUIRED COMPONENTS program_options)
 add_executable(${PROJECT_NAME}
     main.cpp
     async.hpp
+    multithreadQueue.hpp
+    asyncN.hpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
