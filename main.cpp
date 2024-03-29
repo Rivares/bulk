@@ -7,8 +7,8 @@
 
 #include <thread>
 
-//struct Bulk;
-//extern Bulk bulk;
+//struct parser;
+//extern parser parser;
 //size_t connect(size_t N);
 //void receive(const char *buff, size_t buff_size, const size_t &id);
 //void disconnect(const size_t &id);
@@ -30,7 +30,7 @@
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] const char* argv[])
 {
-    ProfilerStart("bulk_async.prof");
+    ProfilerStart("parser_async.prof");
 
 ///    Разработать программу для пакетной обработки команд.
 ///    Команды считываются построчно из стандартного ввода и обрабатываются блоками по N команд.
@@ -51,49 +51,51 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] const char* argv[])
     try
     {
         {
-            auto id3 = connect(3);
+            ParserCommands parser;
 
-            receive("cmd1", 4, id3);
-            receive("cmd2", 4, id3);
-            receive("{", 1, id3);
-            receive("cmd3", 4, id3);
-            receive("cmd4", 4, id3);
-            receive("}", 1, id3);
-            receive("{", 1, id3);
-            receive("cmd5", 4, id3);
-            receive("cmd6", 4, id3);
-            receive("{", 1, id3);
-            receive("cmd7", 4, id3);
-            receive("cmd8", 4, id3);
-            receive("}", 1, id3);
-            receive("cmd9", 4, id3);
-            receive("}", 1, id3);
-            receive("{", 1, id3);
-            receive("cmd10", 4, id3);
-            receive("cmd11", 4, id3);
+            auto threadID_1 = parser.connect(3);
 
-            auto id4 = connect(4);
-            receive("cmd1", 4, id4);
-            receive("cmd2", 4, id4);
-            receive("{", 1, id4);
-            receive("cmd3", 4, id4);
-            receive("cmd4", 4, id4);
-            receive("}", 1, id4);
-            receive("{", 1, id4);
-            receive("cmd5", 4, id4);
-            receive("cmd6", 4, id4);
-            receive("{", 1, id4);
-            receive("cmd7", 4, id4);
-            receive("cmd8", 4, id4);
-            receive("}", 1, id4);
-            receive("cmd9", 4, id4);
-            receive("}", 1, id4);
-            receive("{", 1, id4);
-            receive("cmd10", 4, id4);
-            receive("cmd11", 4, id4);
+            parser.receive("cmd1", 4, threadID_1);
+            parser.receive("cmd2", 4, threadID_1);
+            parser.receive("{",    1, threadID_1);
+            parser.receive("cmd3", 4, threadID_1);
+            parser.receive("cmd4", 4, threadID_1);
+            parser.receive("}",    1, threadID_1);
+            parser.receive("{",    1, threadID_1);
+            parser.receive("cmd5", 4, threadID_1);
+            parser.receive("cmd6", 4, threadID_1);
+            parser.receive("{",    1, threadID_1);
+            parser.receive("cmd7", 4, threadID_1);
+            parser.receive("cmd8", 4, threadID_1);
+            parser.receive("}",    1, threadID_1);
+            parser.receive("cmd9", 4, threadID_1);
+            parser.receive("}",    1, threadID_1);
+            parser.receive("{",    1, threadID_1);
+            parser.receive("cmd10", 4, threadID_1);
+            parser.receive("cmd11", 4, threadID_1);
 
-            disconnect(id3);
-            disconnect(id4);
+            auto threadID_2 = parser.connect(4);
+            parser.receive("cmd1", 4, threadID_2);
+            parser.receive("cmd2", 4, threadID_2);
+            parser.receive("{",    1, threadID_2);
+            parser.receive("cmd3", 4, threadID_2);
+            parser.receive("cmd4", 4, threadID_2);
+            parser.receive("}",    1, threadID_2);
+            parser.receive("{",    1, threadID_2);
+            parser.receive("cmd5", 4, threadID_2);
+            parser.receive("cmd6", 4, threadID_2);
+            parser.receive("{",    1, threadID_2);
+            parser.receive("cmd7", 4, threadID_2);
+            parser.receive("cmd8", 4, threadID_2);
+            parser.receive("}",    1, threadID_2);
+            parser.receive("cmd9", 4, threadID_2);
+            parser.receive("}",    1, threadID_2);
+            parser.receive("{",    1, threadID_2);
+            parser.receive("cmd10", 4, threadID_2);
+            parser.receive("cmd11", 4, threadID_2);
+
+            parser.disconnect(threadID_1);
+            parser.disconnect(threadID_2);
 
 
 //            std::unique_ptr<LoggerFixedCntCMDs> genLogger = std::make_unique<LoggerFixedCntCMDs>(std::stoi(static_cast<std::string>(argv[1])));

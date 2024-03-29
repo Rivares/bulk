@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <chrono>
 
+#include "async.hpp"
 #include "multithreadQueue.hpp"
 
 using namespace std::chrono_literals;
@@ -15,11 +16,124 @@ struct block_t {
     std::string cmd;
 };
 
-struct conn_t {
+struct ThreadLogger
+{
     size_t limit_cmd{}, cnt_cmd{}, cnt_brace{};
     block_t block_cmd;
+
+    std::unique_ptr<LoggerFixedCntCMDs> genLogger;
+    std::unique_ptr<LoggerRemainingCMDs> otherLogger;
+    size_t cntUnfinishedBraces;
+
+
+    explicit ThreadLogger(const size_t cntBlocks)
+        : genLogger(std::make_unique<LoggerFixedCntCMDs>(cntBlocks))
+        , otherLogger(std::make_unique<LoggerRemainingCMDs>())
+        , cntUnfinishedBraces(0)
+    {
+
+    }
+
+    ~ThreadLogger()
+    {}
+
+    void increaseUnfinishedBraces()
+    {   ++cntUnfinishedBraces;  }
+
+    void reduceUnfinishedBraces()
+    {   --cntUnfinishedBraces;  }
+
+
     bool empty() {
         return block_cmd.t_stamp.empty();
+    }
+};
+
+
+class ParserCommands
+{
+    std::unordered_map<size_t, ThreadLogger> m_connectionPool;
+    size_t m_threadId;
+
+    std::mutex m_connetMutex;
+public:
+
+    ParserCommands()
+        : m_threadId(0)
+    {}
+
+    ~ParserCommands()
+    {}
+
+    size_t connect(const size_t cntBlocks)
+    {
+        std::lock_guard<std::mutex> lock(m_connetMutex);
+
+        m_connectionPool.emplace(m_threadId, cntBlocks);
+        return m_threadId++;
+    }
+
+    void receive(const std::string& currCommand, size_t buffSize, const size_t idThread)
+    {
+        if (currCommand.empty())
+        {   return;   }
+
+        auto& currThread = m_connectionPool.at(idThread);
+
+        if (currCommand == "{")
+        {
+            currThread.increaseUnfinishedBraces();
+
+            if (currThread.cntUnfinishedBraces == 1)
+            {
+                /*!
+                    Вывод оставшихся комманд из статического блока
+                */
+                currThread.genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING);
+            }
+
+            return;
+        }
+        if (currCommand == "}")
+        {
+            currThread.reduceUnfinishedBraces();
+
+            if (currThread.cntUnfinishedBraces == 0)
+            {
+                /*!
+                    Вывод комманд из динамического блока, когда ввод закончен
+                */
+                currThread.otherLogger->logMessage();
+            }
+
+            return;
+        }
+
+        /*!
+            Ввод комманд из динамического и статического блоков
+        */
+        if (currThread.cntUnfinishedBraces >= 1)
+        {
+            currThread.otherLogger->pushCommand(currCommand);
+        }
+        else
+        {
+            currThread.genLogger->pushCommand(currCommand);
+        }
+
+        /*!
+            Вывод фиксированного кол-ва комманд из статического блока
+        */
+        currThread.genLogger->logMessage();
+    }
+
+    void disconnect(const size_t idThread)
+    {
+        genLogger->logMessage(LoggerFixedCntCMDs::Mode::REMAINING);
+
+        std::unique_lock<std::mutex> lock(m_connetMutex);
+        m_connectionPool.erase(idThread);
+        lock.unlock();
     }
 };
 
@@ -50,9 +164,10 @@ struct Bulk {
         file2.join();
     }
 
-    size_t connect(const size_t id) {
-        std::lock_guard<std::mutex> lock(connection_mutex);
-        connection_pool.insert({ID, {id, {}}});
+    size_t connect(const size_t id)
+    {
+        std::lock_guard<std::mutex> lock(connection_mutex);        
+        connectionPool.insert({ID, {id, {}}});
         return ID++;
     }
 
@@ -134,7 +249,7 @@ private:
 
     std::string curdir;
     std::atomic<bool> finished{false};
-    std::unordered_map<size_t, conn_t> connection_pool;
+    std::unordered_map<size_t, ThreadLogger> connectionPool;
     ts_queue<block_t> queue_log{};
     ts_queue<block_t> queue_file{};
     std::thread log{&Bulk::to_log_queue, this};
@@ -147,18 +262,4 @@ private:
     std::mutex connection_mutex;
 };
 
-namespace {
-    Bulk bulk;
-}
 
-size_t connect(size_t N) {
-    return bulk.connect(N);
-}
-
-void receive(const char *buff, size_t buff_size, const size_t &id) {
-    bulk.receive(buff, buff_size, id);
-}
-
-void disconnect(const size_t &id) {
-    bulk.disconnect(id);
-}
