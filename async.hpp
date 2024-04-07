@@ -229,7 +229,7 @@ public:
             m_ptrToFile = std::make_unique<std::ofstream>(std::move(file));
         }
         m_cv.notify_all();
-
+std::cout << m_outputStr;
 
         while (commands.size() != 0)
         {
@@ -241,6 +241,7 @@ public:
                 m_outputStr = outStr;
             }
             m_cv.notify_all();
+std::cout << m_outputStr;
 
             commands.pop();
         }        

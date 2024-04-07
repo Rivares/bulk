@@ -159,27 +159,27 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] const char* argv[])
 
         }
 
-        {
-            const std::size_t numberOfCommandsPerThread = 1;//10;
+//        {
+//            const std::size_t numberOfCommandsPerThread = 1;//10;
 
-            auto worker = [numberOfCommandsPerThread](std::size_t threadNum, std::size_t blockSize) {
-                auto handle = connect(blockSize);
-                for (std::size_t i = 0; i < numberOfCommandsPerThread; ++i) {
-                    std::string command{"cmd"};
-                    command += std::to_string(i + 1) + "_" + std::to_string(threadNum);
-                    receive(command.data(), command.size(), handle);
-                }
-                disconnect(handle);
-            };
+//            auto worker = [numberOfCommandsPerThread](std::size_t threadNum, std::size_t blockSize) {
+//                auto handle = connect(blockSize);
+//                for (std::size_t i = 0; i < numberOfCommandsPerThread; ++i) {
+//                    std::string command{"cmd"};
+//                    command += std::to_string(i + 1) + "_" + std::to_string(threadNum);
+//                    receive(command.data(), command.size(), handle);
+//                }
+//                disconnect(handle);
+//            };
 
-            std::thread t1(worker, 0, 1);
-            std::thread t2(worker, 1, 3);
-            std::thread t3(worker, 2, 5);
+//            std::thread t1(worker, 0, 1);
+//            std::thread t2(worker, 1, 3);
+//            std::thread t3(worker, 2, 5);
 
-            t1.join();
-            t2.join();
-            t3.join();
-        }
+//            t1.join();
+//            t2.join();
+//            t3.join();
+//        }
     }
     catch (const std::exception& except)
     {
